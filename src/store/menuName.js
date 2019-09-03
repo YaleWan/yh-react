@@ -1,12 +1,16 @@
-export const  menuReducer = function (menuName = '首页',action) {
-    console.log('action', action)
-    menuName = action.menuName || '首页'
-    switch (action.type) {
-        case 'updateMenuName':
-            return menuName
-    
-        default:
-            return menuName
+export const menuReducer = function(menuName = ["首页"], action) {
+    if (action.menuName) {
+      menuName.push(action.menuName);
     }
-}
-export const updateMenuName = menuName => ({type:'updateMenuName',menuName : menuName})
+  switch (action.type) {
+    case "updateMenuName":
+      return [...menuName];
+
+    default:
+      return menuName;
+  }
+};
+export const updateMenuName = menuName => ({
+  type: "updateMenuName",
+  menuName: menuName
+});

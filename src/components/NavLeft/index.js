@@ -29,22 +29,19 @@ class NavLeft extends Component {
     });
     // hashHistory.push(key);
   };
-  componentWillMount() {
-    const menuTreeNode = this.renderMenu(menuList);
-    console.log('menuTreeNode', menuTreeNode)
-
-    this.setState({
-      menuTreeNode
-    });
-  }
+  
   // 菜单渲染
   renderMenu = data => {
     return data.map(item => {
       if (!item.children) {
         return (
-          <Menu.Item title={item.title} key={item.key}>
-            <Icon type="user" />
-            {item.title}
+          <Menu.Item
+            title={item.title}
+            key={item.key}
+            onClick={() => this.props.updateMenuName(item.title)}
+          >
+            <Icon type="menu" />
+            <span>{item.title}</span>
           </Menu.Item>
         );
       }
@@ -53,7 +50,7 @@ class NavLeft extends Component {
           title={
             <span>
               <Icon type="menu" />
-              <span>User</span>
+              <span>{item.title}</span>
             </span>
           }
           key={item.key}
@@ -71,8 +68,9 @@ class NavLeft extends Component {
   render() {
     return (
       <div>
+        {this.props.menuName}
         <Menu onClick={this.handleClick} theme="dark" mode="inline">
-          {this.state.menuTreeNode}
+          {this.renderMenu(menuList)}
         </Menu>
       </div>
     );
