@@ -2,23 +2,41 @@ import React from "react";
 import NavTop from "./components/NavTop";
 import NavLeft from "./components/NavLeft";
 import Contanier from "./components/Contanier";
-import Bread from "./components/Bread"
+import Bread from "./components/Bread";
 import { Layout } from "antd";
+import { findAllMenu } from "./Api/system";
+
 const { Header, Sider, Content } = Layout;
 
 export default class Admin extends React.Component {
   state = {
-    collapsed: false
+    collapsed: false,
+    data: [],
+    curSystemId: "1",
+    menuList: []
   };
-
+  async componentDidMount() {
+    const { data } = await findAllMenu();
+    this.setState({ menuList: data[this.state.curSystemId - 1],data: data });
+  }
   onCollapse = collapsed => {
     this.setState({ collapsed });
+  };
+  clickSystem = ({ key: id }) => {
+    this.setState({
+      curSystemId: id,
+      menuList:this.state.data[id - 1]
+    });
   };
   render() {
     return (
       <Layout>
         <Header className="header">
-          <NavTop />
+          <NavTop
+            menuList={this.state.data}
+            onClickSystem={this.clickSystem}
+            curSystemId={this.state.curSystemId}
+          />
         </Header>
         <Layout style={{ minHeight: "100vh" }}>
           <Sider
@@ -26,12 +44,14 @@ export default class Admin extends React.Component {
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
           >
-            <NavLeft />
+            <NavLeft
+              menuList={this.state.menuList.children}
+            />
           </Sider>
           <Layout>
             <Content style={{ margin: "0 16px" }}>
               <Bread />
-              <Contanier />
+              <Contanier {...this.props} />
             </Content>
           </Layout>
         </Layout>

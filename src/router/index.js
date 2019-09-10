@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import Login from "../pages/Login";
-import About from "../pages/About";
+import User from "../pages/User";
 import Home from "../pages/Home";
 import App from "../App.js";
 import Admin from "../admin";
+import Role from "../pages/Role";
 
 export default class Router extends Component {
   render() {
@@ -13,13 +14,19 @@ export default class Router extends Component {
         <App>
           <Switch>
             <Route path="/login" component={Login} />
-            <Admin>
-              <Switch>
-                <Route path="/about" component={About} />
-                <Route path="/home" component={Home} />
-                <Redirect to="/login"></Redirect>
-              </Switch>
-            </Admin>
+            <Route
+              path="/"
+              render={() => (
+                <Admin> 
+                  <Switch>
+                    <Route path="/user" component={User} />
+                    <Route path="/home" component={Home} />
+                    <Route path="/role" component={Role} />
+                    <Redirect to="/login" />
+                  </Switch>
+                </Admin>
+              )}
+            />
           </Switch>
         </App>
       </HashRouter>

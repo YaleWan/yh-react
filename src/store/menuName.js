@@ -1,16 +1,17 @@
 export const menuReducer = function(menuName = ["首页"], action) {
-    if (action.menuName) {
-      menuName.push(action.menuName);
-    }
+  let menuList = ["首页"];
+  if (action.menu) {
+    menuList.push(action.menu);
+  }
   switch (action.type) {
     case "updateMenuName":
-      return [...menuName];
+      return menuList;
 
     default:
       return menuName;
   }
 };
-export const updateMenuName = menuName => ({
+export const updateMenuName = menu => ({
   type: "updateMenuName",
-  menuName: menuName
+  menu: menu
 });

@@ -3,7 +3,7 @@ import { Menu, Icon } from "antd";
 import "./index.css";
 import { connect } from "react-redux";
 import { updateMenuName } from "../../store/menuName.js";
-import menuList from "../../config/menuConfig.js";
+// import menuList from "../../config/menuConfig.js";
 
 const { SubMenu } = Menu;
 
@@ -15,7 +15,8 @@ const { SubMenu } = Menu;
 )
 class NavLeft extends Component {
   state = {
-    currentKey: ""
+    currentKey: "",
+    menuList: []
   };
   // 菜单点击
   handleClick = ({ item, key }) => {
@@ -24,39 +25,43 @@ class NavLeft extends Component {
     }
     // 事件派发，自动调用reducer，通过reducer保存到store对象中
 
+    this.props.updateMenuName(item.props.title);
     this.setState({
       currentKey: key
     });
-    // hashHistory.push(key);
+    window.location.hash = "#" + key;
   };
-  
+
   // 菜单渲染
   renderMenu = data => {
+    if (!data) {
+      return;
+    }
     return data.map(item => {
-      if (!item.children) {
+      if (item.children) {
         return (
-          <Menu.Item
-            title={item.title}
-            key={item.key}
-            onClick={() => this.props.updateMenuName(item.title)}
+          <SubMenu
+            title={
+              <span>
+                <Icon type="menu" />
+                <span>{item.title}</span>
+              </span>
+            }
+            key={item.id}
           >
-            <Icon type="menu" />
-            <span>{item.title}</span>
-          </Menu.Item>
+            {this.renderMenu(item.children)}
+          </SubMenu>
         );
       }
       return (
-        <SubMenu
-          title={
-            <span>
-              <Icon type="menu" />
-              <span>{item.title}</span>
-            </span>
-          }
+        <Menu.Item
+          title={item.title}
           key={item.key}
+          // onClick={() => this.props.updateMenuName(item.title)}
         >
-          {this.renderMenu(item.children)}
-        </SubMenu>
+          <Icon type="menu" />
+          <span>{item.title}</span>
+        </Menu.Item>
       );
     });
   };
@@ -66,11 +71,16 @@ class NavLeft extends Component {
     });
   };
   render() {
+   
     return (
       <div>
-        {this.props.menuName}
-        <Menu onClick={this.handleClick} theme="dark" mode="inline">
-          {this.renderMenu(menuList)}
+        <Menu
+          onClick={this.handleClick}
+          theme="dark"
+          mode="inline"
+          // selectedKeys = {['/user']}
+        >
+          {this.renderMenu(this.props.menuList)}
         </Menu>
       </div>
     );

@@ -4,6 +4,10 @@ const menuList = [
         key: '/home'
     },
     {
+        title: '关于',
+        key: '/about'
+    },
+    {
         title: 'UI',
         key: '/ui',
         children: [

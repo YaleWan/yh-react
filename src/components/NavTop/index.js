@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Menu } from "antd";
-import './index.css'
+import "./index.css";
+
 export default class NavTop extends Component {
   render() {
     return (
@@ -9,12 +10,21 @@ export default class NavTop extends Component {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["2"]}
+          defaultSelectedKeys={[this.props.curSystemId]}
+          
           style={{ lineHeight: "64px" }}
+          onClick={this.props.onClickSystem}
+
         >
-          <Menu.Item key="1">nav 1</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
-          <Menu.Item key="3">nav 3</Menu.Item>
+          {this.props.menuList.map(item => {
+            return (
+              <Menu.Item
+                key={item.id}
+              >
+                {item.title}
+              </Menu.Item>
+            );
+          })}
         </Menu>
       </div>
     );
