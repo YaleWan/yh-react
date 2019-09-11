@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Menu, Icon } from "antd";
-import "./index.css";
 import { connect } from "react-redux";
+import {withRouter} from 'react-router-dom'
 import { updateMenuName } from "../../store/menuName.js";
-// import menuList from "../../config/menuConfig.js";
+import "./index.css";
 
 const { SubMenu } = Menu;
 
@@ -71,6 +71,7 @@ class NavLeft extends Component {
     });
   };
   render() {
+    const {history} = this.props
    
     return (
       <div>
@@ -78,7 +79,8 @@ class NavLeft extends Component {
           onClick={this.handleClick}
           theme="dark"
           mode="inline"
-          // selectedKeys = {['/user']}
+          defaultSelectedKeys={['/home']}
+          selectedKeys = {[history.location.pathname]}
         >
           {this.renderMenu(this.props.menuList)}
         </Menu>
@@ -86,4 +88,4 @@ class NavLeft extends Component {
     );
   }
 }
-export default NavLeft;
+export default withRouter(NavLeft);

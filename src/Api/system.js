@@ -7,3 +7,6 @@ export const findAllMenu = ()=>{
 export const findButtons = (id)=>{
     return axios.post('/findButtons',{id})
 }
+export const addUser = (userInfo) => {
+    return axios.post('/addUser',userInfo)
+}
