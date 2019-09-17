@@ -13,11 +13,21 @@ export default class Admin extends React.Component {
     collapsed: false,
     data: [],
     curSystemId: "1",
-    menuList: []
+    menuList: [],
+    height: ""
   };
+  componentWillMount() {
+    this.setState({
+      height: document.body.clientHeight
+    });
+  }
   async componentDidMount() {
     const { data } = await findAllMenu();
-    this.setState({ menuList: data[this.state.curSystemId - 1],data: data });
+
+    this.setState({
+      menuList: data[this.state.curSystemId - 1],
+      data: data
+    });
   }
   onCollapse = collapsed => {
     this.setState({ collapsed });
@@ -25,28 +35,30 @@ export default class Admin extends React.Component {
   clickSystem = ({ key: id }) => {
     this.setState({
       curSystemId: id,
-      menuList:this.state.data[id - 1]
+      menuList: this.state.data[id - 1]
     });
   };
   render() {
+    const { height } = this.state;
     return (
       <Layout>
-        <Header className="header">
+        <Header
+          className="header"
+          style={{ position: "fixed", zIndex: 1, width: "100%" }}
+        >
           <NavTop
             menuList={this.state.data}
             onClickSystem={this.clickSystem}
             curSystemId={this.state.curSystemId}
           />
         </Header>
-        <Layout style={{ minHeight: "100vh" }}>
+        <Layout style={{ height: height - 64, marginTop: 64 }}>
           <Sider
             collapsible
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
           >
-            <NavLeft
-              menuList={this.state.menuList.children}
-            />
+            <NavLeft menuList={this.state.menuList.children} />
           </Sider>
           <Layout>
             <Content style={{ margin: "0 16px" }}>

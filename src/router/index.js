@@ -6,6 +6,7 @@ import Home from "../pages/Home";
 import App from "../App.js";
 import Admin from "../admin";
 import Role from "../pages/Role";
+import Menu from "../pages/Menu";
 
 export default class Router extends Component {
   render() {
@@ -17,11 +18,12 @@ export default class Router extends Component {
             <Route
               path="/"
               render={() => (
-                <Admin> 
+                <Admin>
                   <Switch>
                     <Route path="/user" component={User} />
                     <Route path="/home" component={Home} />
                     <Route path="/role" component={Role} />
+                    <Route path="/menu" component={Menu} />
                     <Redirect to="/login" />
                   </Switch>
                 </Admin>

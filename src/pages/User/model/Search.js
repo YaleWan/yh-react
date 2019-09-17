@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Button} from "antd";
+import { Form, Input, Button } from "antd";
 
 export default class Search extends Component {
   render() {
@@ -7,13 +7,21 @@ export default class Search extends Component {
       <div>
         <Form layout="inline">
           <Form.Item label="用户账号">
-            <Input />
+            <Input
+              value={this.props.account}
+              onChange={this.props.onAccountChange}
+            />
           </Form.Item>
           <Form.Item label="用户名称">
-            <Input />
+            <Input
+              value={this.props.username}
+              onChange={this.props.onUsernameChange}
+            />
           </Form.Item>
           <Form.Item>
-            <Button type="primary">查询</Button>
+            <Button type="primary" onClick={this.props.search}>
+              查询
+            </Button>
             <Button>重置</Button>
           </Form.Item>
         </Form>

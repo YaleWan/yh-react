@@ -11,12 +11,13 @@ class AddModal extends Component {
     });
   };
   render() {
-    const { visible, form } = this.props;
+    const { visible, form, modalInfo } = this.props;
     const { getFieldDecorator } = form;
     const formItemLayout = {
       labelCol: { span: 4 },
       wrapperCol: { span: 18 }
     };
+
     return (
       <div>
         <Modal
@@ -28,8 +29,10 @@ class AddModal extends Component {
           <Form onSubmit={this.handleSubmit}>
             <Form.Item label="用户账号" {...formItemLayout}>
               {getFieldDecorator("account", {
+                initialValue: modalInfo ? modalInfo.account : "",
                 rules: [
                   {
+                    
                     required: true,
                     message: "Please input the title of collection!"
                   }
@@ -38,6 +41,7 @@ class AddModal extends Component {
             </Form.Item>
             <Form.Item label="用户名称" {...formItemLayout}>
               {getFieldDecorator("username", {
+                initialValue: modalInfo ? modalInfo.username : "",
                 rules: [
                   {
                     required: true,
@@ -49,24 +53,24 @@ class AddModal extends Component {
 
             <Form.Item label="固定电话" {...formItemLayout}>
               {getFieldDecorator("tel", {
-                initialValue: ""
+                initialValue: modalInfo ? modalInfo.tel : ""
               })(<Input />)}
             </Form.Item>
 
             <Form.Item label="手机号码" {...formItemLayout}>
               {getFieldDecorator("phone", {
-                initialValue: ""
+                initialValue: modalInfo ? modalInfo.phone : ""
               })(<Input />)}
             </Form.Item>
             <Form.Item label="电子邮箱" {...formItemLayout}>
               {getFieldDecorator("email", {
-                initialValue: ""
+                initialValue: modalInfo ? modalInfo.email : ""
               })(<Input />)}
             </Form.Item>
 
             <Form.Item label="性别" {...formItemLayout}>
               {getFieldDecorator("sex", {
-                initialValue: "0"
+                initialValue: modalInfo ? modalInfo.sex : 0
               })(
                 <Radio.Group>
                   <Radio value="0">男</Radio>
@@ -76,7 +80,7 @@ class AddModal extends Component {
             </Form.Item>
             <Form.Item label="备注" {...formItemLayout}>
               {getFieldDecorator("remark", {
-                initialValue: ""
+                initialValue: modalInfo ? modalInfo.remark : ''
               })(<Input.TextArea />)}
             </Form.Item>
           </Form>
