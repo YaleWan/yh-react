@@ -7,9 +7,16 @@ export default class Contanier extends Component {
     });
   }
   render() {
-    const {height} = this.state
+    const { height } = this.state;
     return (
-      <div style={{ padding: 24, background: "#fff" ,height:height-130}}>
+      <div
+        style={{
+          padding: 24,
+          background: "#fff",
+          height: height - 130,
+          overflow: "hidden"
+        }}
+      >
         {this.props.children}
       </div>
     );

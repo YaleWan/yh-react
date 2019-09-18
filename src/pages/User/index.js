@@ -1,5 +1,5 @@
 import ButtonGroup from "../../components/ButtonGroup";
-import TableModel from "./model/Table";
+import TableModel from "../../components/Table";
 import React, { Component } from "react";
 import Search from "./model/Search";
 import AddModal from "./model/AddModal";
