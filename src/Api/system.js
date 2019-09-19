@@ -14,13 +14,12 @@ export const findButtons = id => {
 
 // 查询所有用户信息的接口
 export const findUser = attrs => {
-  console.log("attrs :", attrs);
   return axios.post("/findUser", attrs);
 };
 
-// 修改新增用户信息的接口
-export const addUser = (userInfo, type, id) => {
-  return axios.post("/addUser", [userInfo, type, id]);
+// 修改-新增用户信息的接口
+export const handleUser = (userInfo, type, id) => {
+  return axios.post("/handleUser", [userInfo, type, id]);
 };
 
 // 删除用户信息的接口
@@ -28,7 +27,7 @@ export const delUser = ids => {
   return axios.post("/delUser", { ids });
 };
 
-// 修改新增菜单接口
+// 修改-新增菜单接口
 export const handleMenu = (menuInfo, type, id) => {
   return axios.post("/handleMenu", [menuInfo, type, id]);
 };
@@ -37,3 +36,13 @@ export const handleMenu = (menuInfo, type, id) => {
 export const delMenu = id => {
   return axios.post("/delMenu", {id});
 };
+
+// 修改-新增按钮接口
+export const handleButton = (buttonInfo,type,id) =>{
+  return axios.post('/handleButton',[buttonInfo,type,id])
+}
+
+// 删除按钮接口
+export const delButton = ids => {
+  return axios.post("/delButton",{ids})
+}

@@ -3,7 +3,7 @@ import TableModel from "../../components/Table";
 import React, { Component } from "react";
 import Search from "./model/Search";
 import AddModal from "./model/AddModal";
-import { addUser, findUser, delUser } from "../../Api/system.js";
+import { handleUser, findUser, delUser } from "../../Api/system.js";
 import { message } from "antd";
 import moment from "moment";
 
@@ -77,7 +77,7 @@ export default class User extends Component {
         return;
       }
       const { type, selectedRowKeys } = this.state;
-      const { data } = await addUser(values, type, selectedRowKeys[0]);
+      const { data } = await handleUser(values, type, selectedRowKeys[0]);
 
       if (data.code === 200) {
         message.success(data.message);

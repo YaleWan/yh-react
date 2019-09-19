@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Card, Icon, Descriptions, Table, message } from "antd";
 import MenuTree from "../../components/MenuTree";
 import "./index.css";
-import { findButtons, handleMenu, delMenu } from "../../Api/system";
+import { findButtons, handleMenu, delMenu, handleButton ,delButton } from "../../Api/system";
 import ButtonDialog from "./model/ButtonDialog";
 import MenuDialog from "./model/MenuDialog";
 
@@ -15,9 +15,12 @@ export default class Menu extends Component {
     menuInfo: {},
     buttonInfo:{},
     menuType: "0",
-    buttonType:'0'
+    buttonType:'0',
+    selectedRowKeys: [], //选中table行的key值
+    selectedRows: [] //选中table行的信息
 
   };
+  // 新增菜单
   addMenu = () => {
     if (this.state.curTree.type == "1") {
       return message.error("只能在目录下新建菜单！");
@@ -28,6 +31,7 @@ export default class Menu extends Component {
       menuInfo: {}
     });
   };
+  // 修改菜单
   editMenu = () => {
     // console.log('this. :', this);
     if (!this.state.curTree.id) {
@@ -39,9 +43,13 @@ export default class Menu extends Component {
       menuInfo: this.state.curTree
     });
   };
+  // 删除菜单
   delMenu = async () => {
     if (!this.state.curTree.id) {
       return message.error("请选择一条数据进行删除！");
+    }
+    if(this.state.curTree.children){
+      return message.error("当前目录下存在菜单！")
     }
     const { data } = await delMenu(this.state.curTree.id);
     if (data.code == 200) {
@@ -50,6 +58,7 @@ export default class Menu extends Component {
       message.error(data.message);
     }
   };
+  // 保存菜单
   saveMenu = () => {
     const { form } = this.menuRef.props;
     const { curTree, menuType } = this.state;
@@ -57,10 +66,23 @@ export default class Menu extends Component {
       if (err) {
         return;
       }
+      
+      
       const menuInfo = {
         ...values,
         pid: menuType == "1" ? curTree.pid : curTree.id
       };
+
+      // 如果pid为空的话，那么说明此时在根目录下
+      // 将pid赋值为0，
+      // 同时判断是否为菜单（根目录下只能为目录）
+      
+      if(!curTree.id){
+        menuInfo.pid = 0
+        if(menuInfo.type == 1){
+          return message.error('根菜单下只能为目录！')
+        }
+      }
       const { data } = await handleMenu(menuInfo, menuType, curTree.id);
       if (data.code == 200) {
         message.success(data.message);
@@ -72,15 +94,30 @@ export default class Menu extends Component {
       });
     });
   };
-  saveButton = ()=>{
+  // 保存按钮
+  saveButton = async ()=>{
     const {form} = this.buttonRef.props;
+    const {buttonType,selectedRowKeys,curTree} = this.state
     form.validateFields(async (err,values) =>{
       if(err){
         return;
       }
-      console.log('values :', values);
+      const buttonInfo = {
+        ...values,
+        pid:curTree.id
+      }
+      const {data} = await handleButton(buttonInfo,buttonType,selectedRowKeys[0])
+      if (data.code == 200) {
+        message.success(data.message);
+      } else {
+        message.error(data.message);
+      }
+      this.setState({
+        buttonVisible: false
+      });
     })
   }
+  // 新增按钮
   addButton = ()=>{
     if (this.state.curTree.type == "0") {
       return message.error("目录下禁止新增按钮！");
@@ -91,27 +128,57 @@ export default class Menu extends Component {
       buttonInfo: {}
     });
   }
+  // 修改按钮
+  editButton = () => {
+    if (
+      !this.state.selectedRowKeys ||
+      this.state.selectedRowKeys.length !== 1
+    ) {
+      return message.error("请选择一条数据进行修改！");
+    }
+    this.setState({
+      buttonType: "1",
+      buttonVisible: true,
+      buttonInfo: this.state.selectedRows[0]
+    });
+  }
+  // 删除按钮
+  delButton = async () => {
+    if (!this.state.selectedRowKeys || this.state.selectedRowKeys.length == 0) {
+      return message.error("请至少选择一条数据进行删除！");
+    }
+    const { data } = await delButton(this.state.selectedRowKeys);
+    if (data.code === 200) {
+      // 删除成功提示信息
+      message.success(data.message);
+      this.state.selectedRowKeys = [];
+      this.state.selectedRows =[]
+    } else {
+      message.error(data.message);
+    }
+  }
+  // 关闭弹出框
   cacelModel = () => {
     this.setState({
       menuVisible: false,
       buttonVisible:false
     });
   };
+  // 获取菜单弹出框信息
   menuDialogRef = formRef => {
     this.menuRef = formRef;
   };
+  // 获取按钮弹出框信息
   buttonDialogRef = formRef => {
     this.buttonRef = formRef;
   };
-  
-  onSelect = (keys, event) => {
-    console.log("Trigger Select", keys, event);
-  };
+  // 刷新按钮
   reload = () => {
     window.location.reload();
   };
-
+  // 点击菜单获取对应的按钮
   onTreeNodes = async (selectedKeys, e) => {
+    console.log('object :', e.node.props.dataRef);
     const { data } = await findButtons(e.node.props.dataRef.id);
     this.setState({
       curTree: e.node.props.dataRef,
@@ -131,10 +198,10 @@ export default class Menu extends Component {
         key: "event"
       }
     ];
-    // const { selectedRowKeys, selectedRows } = this.state;
+    const { selectedRowKeys, selectedRows } = this.state;
     const rowSelection = {
-      // selectedRowKeys,
-      // selectedRows,
+      selectedRowKeys,
+      selectedRows,
       onChange: (selectedRowKeys, selectedRows) => {
         this.setState({
           selectedRowKeys,
@@ -142,7 +209,6 @@ export default class Menu extends Component {
         });
       },
       getCheckboxProps: record => ({
-        disabled: record.name === "Disabled User", // Column configuration not to be checked
         name: record.name
       })
     };
@@ -187,8 +253,8 @@ export default class Menu extends Component {
             extra={
               <div>
                 <Icon type="plus" onClick = {this.addButton} />
-                <Icon type="edit" />
-                <Icon type="delete" />
+                <Icon type="edit" onClick = {this.editButton}/>
+                <Icon type="delete" onClick = {this.delButton}/>
               </div>
             }
           >
