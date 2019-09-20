@@ -46,3 +46,18 @@ export const handleButton = (buttonInfo,type,id) =>{
 export const delButton = ids => {
   return axios.post("/delButton",{ids})
 }
+
+// 查询所有角色信息的接口
+export const findRole = attrs => {
+  return axios.post("/findRole", attrs);
+};
+
+// 修改-新增角色信息的接口
+export const handleRole = (roleInfo, type, id) => {
+  return axios.post("/handleRole", [roleInfo, type, id]);
+};
+
+// 删除角色信息的接口
+export const delRole = ids => {
+  return axios.post("/delRole", { ids });
+};

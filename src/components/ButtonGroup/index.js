@@ -20,8 +20,9 @@ export default class ButtonGroup extends Component {
           return (
             <Button
               key={item.id}
+              icon={item.icon}
               type="primary"
-              onClick={()=>this.props.clickEvents(item.event)}
+              onClick={() => this.props.clickEvents(item.event)}
             >
               {item.name}
             </Button>
